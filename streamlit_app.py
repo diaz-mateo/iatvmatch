@@ -1,14 +1,20 @@
-import streamlit as st
+# Instalar dependencias (ejecuta esta celda en Google Colab)
+!pip install streamlit
+!pip install gpt4all==1.0.5
+!pip install setuptools
+!pip install requests
+
+# Código de la aplicación
 import os
-import subprocess
 import json
+import requests
+import streamlit as st
 from gpt4all import GPT4All
 
 # Ruta del modelo
 modelo_path = "Meta-Llama-3-8B-Instruct.Q4_0.gguf"
 
-import requests
-
+# Descargar el modelo si no existe
 if not os.path.exists(modelo_path):
     st.write("Descargando el modelo...")
     url = "https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_0.gguf"
@@ -19,6 +25,8 @@ if not os.path.exists(modelo_path):
         st.write("Modelo descargado exitosamente.")
     else:
         st.error("Error al descargar el modelo. Código de estado: " + str(response.status_code))
+else:
+    st.write("El modelo ya está descargado.")
 
 def cargar_modelo(modelo_path="Meta-Llama-3-8B-Instruct.Q4_0.gguf"):
     """
@@ -77,7 +85,7 @@ def main():
     if modelo is None:
         return
 
-    # Entrada del usuario para el nombre o descripción de la serie
+    # Entrada del usuario
     serie_usuario = st.text_input("Introduce el nombre o descripción de una serie:")
 
     if st.button("Generar recomendaciones"):
