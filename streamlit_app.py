@@ -1,10 +1,3 @@
-# Instalar dependencias (ejecuta esta celda en Google Colab)
-!pip install streamlit
-!pip install gpt4all==1.0.5
-!pip install setuptools
-!pip install requests
-
-# Código de la aplicación
 import os
 import json
 import requests
