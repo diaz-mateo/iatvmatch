@@ -29,19 +29,13 @@ else:
 import json
 from gpt4all import GPT4All
 
-def cargar_modelo(modelo_path="Meta-Llama-3-8B-Instruct.Q4_0.gguf"):
-    """
-    Función para cargar el modelo GPT4All.
-    Si no dispones del modelo indicado, reemplaza 'modelo_path' con el archivo de tu modelo.
-    """
-    try:
-        print("Cargando modelo...")
-        modelo = GPT4All(modelo_path)
-        print("Modelo cargado exitosamente.")
-        return modelo
-    except Exception as e:
-        print(f"Error al cargar el modelo: {e}")
-        return None
+import subprocess
+
+subprocess.run([
+    "wget",
+    "https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_0.gguf",
+    "-O", "Meta-Llama-3-8B-Instruct.Q4_0.gguf"
+])
 
 def generar_recomendaciones(modelo, prompt, max_tokens=512, temperature=0.7):
     """
