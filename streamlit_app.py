@@ -1,7 +1,12 @@
 import json
-!pip install gpt4all
-!pip install streamlit
 import streamlit as st
+import subprocess
+import sys
+
+# Instalar dependencias si no están presentes
+subprocess.run([sys.executable, "-m", "pip", "install", "gpt4all"])
+subprocess.run([sys.executable, "-m", "pip", "install", "streamlit"])
+
 from gpt4all import GPT4All
 
 def cargar_modelo(modelo_path="Meta-Llama-3-8B-Instruct.Q4_0.gguf"):
