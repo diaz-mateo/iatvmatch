@@ -1,4 +1,6 @@
 import json
+!pip install gpt4all
+!pip install streamlit
 import streamlit as st
 from gpt4all import GPT4All
 
