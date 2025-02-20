@@ -7,16 +7,18 @@ from gpt4all import GPT4All
 # Ruta del modelo
 modelo_path = "Meta-Llama-3-8B-Instruct.Q4_0.gguf"
 
-# Descargar el modelo si no existe
+import requests
+
 if not os.path.exists(modelo_path):
     st.write("Descargando el modelo...")
-    subprocess.run([
-        "wget",
-        "https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_0.gguf",
-        "-O", modelo_path
-    ])
-else:
-    st.write("El modelo ya está descargado.")
+    url = "https://huggingface.co/QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/resolve/main/Meta-Llama-3-8B-Instruct.Q4_0.gguf"
+    response = requests.get(url)
+    if response.status_code == 200:
+        with open(modelo_path, "wb") as f:
+            f.write(response.content)
+        st.write("Modelo descargado exitosamente.")
+    else:
+        st.error("Error al descargar el modelo. Código de estado: " + str(response.status_code))
 
 def cargar_modelo(modelo_path="Meta-Llama-3-8B-Instruct.Q4_0.gguf"):
     """
