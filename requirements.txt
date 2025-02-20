@@ -1,2 +1,2 @@
 streamlit
-gpt4all
+gpt4all==1.0.5
