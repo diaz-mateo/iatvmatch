@@ -3,6 +3,7 @@ import json
 import requests
 import streamlit as st
 from gpt4all import GPT4All
+import asyncio
 
 # Ruta del modelo
 modelo_path = "Meta-Llama-3-8B-Instruct.Q4_0.gguf"
@@ -21,12 +22,12 @@ if not os.path.exists(modelo_path):
 else:
     st.write("El modelo ya está descargado.")
 
-def cargar_modelo(modelo_path="Meta-Llama-3-8B-Instruct.Q4_0.gguf"):
+async def cargar_modelo_async(modelo_path="Meta-Llama-3-8B-Instruct.Q4_0.gguf"):
     """
-    Función para cargar el modelo GPT4All.
+    Función asíncrona para cargar el modelo GPT4All.
     """
     try:
-        st.write("Cargando modelo...")
+        st.write("Cargando modelo... (esto puede tardar unos segundos)")
         modelo = GPT4All(modelo_path)
         st.write("Modelo cargado exitosamente.")
         return modelo
@@ -34,9 +35,9 @@ def cargar_modelo(modelo_path="Meta-Llama-3-8B-Instruct.Q4_0.gguf"):
         st.error(f"Error al cargar el modelo: {e}")
         return None
 
-def generar_recomendaciones(modelo, prompt, max_tokens=512, temperature=0.7):
+async def generar_recomendaciones_async(modelo, prompt, max_tokens=512, temperature=0.7):
     """
-    Función que utiliza GPT4All para generar recomendaciones a partir de un prompt.
+    Función asíncrona que utiliza GPT4All para generar recomendaciones a partir de un prompt.
     """
     try:
         with modelo.chat_session():
@@ -73,8 +74,8 @@ def procesar_respuesta(respuesta_json):
 def main():
     st.title("Recomendaciones de Series de TV")
     
-    # Cargar el modelo
-    modelo = cargar_modelo()
+    # Cargar el modelo de forma asíncrona
+    modelo = asyncio.run(cargar_modelo_async())
     if modelo is None:
         return
 
@@ -105,7 +106,7 @@ Genera la respuesta en formato JSON con la siguiente estructura:
 Serie de referencia: "{serie_usuario}"
         """
         st.write("Generando recomendaciones, por favor espere...")
-        respuesta = generar_recomendaciones(modelo, prompt)
+        respuesta = asyncio.run(generar_recomendaciones_async(modelo, prompt))
         if respuesta:
             st.subheader("Respuesta completa del modelo:")
             st.code(respuesta, language="json")
@@ -115,4 +116,5 @@ Serie de referencia: "{serie_usuario}"
             st.write("No se obtuvo respuesta del modelo.")
 
 if __name__ == "__main__":
+    st.set_option('server.debug', True)  # Activar los logs detallados para depuración
     main()
